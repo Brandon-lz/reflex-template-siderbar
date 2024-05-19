@@ -3,7 +3,8 @@ from sqlmodel import select
 from reflex_template_siderbar.models.user import User
 from reflex_template_siderbar.state import AppState
 
-class AdminState(rx.State):
+
+class AdminState(AppState):
     """The app state."""
 
     id: int
@@ -15,11 +16,10 @@ class AdminState(rx.State):
     sort_value: str = ""
     num_Users: int
 
-    # @rx.var
-    async def is_admin(self) -> bool:
-        appstate :AppState = await self.get_state(AppState)
-        if appstate:
-            return appstate.user.is_superuser
+    @rx.var
+    def is_admin(self) -> bool:
+        if self.user:
+            return self.user.is_superuser
         return False
 
     def load_entries(self):
